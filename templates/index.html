@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cocktail AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Cocktail AI</h1>
+    <p>Inserisci gli ingredienti che hai e scopri cosa puoi preparare!</p>
+    <input type="text" id="ingredients" placeholder="es. vodka, lime, menta">
+    <button onclick="getCocktail()">Chiedi</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function getCocktail() {
+      const ingredients = document.getElementById("ingredients").value;
+
+      fetch("/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ingredients })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("result").innerHTML = `<p>${data.answer}</p>`;
+      });
+    }
+  </script>
+</body>
+</html>
