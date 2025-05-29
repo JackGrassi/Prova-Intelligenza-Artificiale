@@ -17,6 +17,8 @@
   <script>
     function getCocktail() {
       const ingredients = document.getElementById("ingredients").value;
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = '<p>Caricamento...</p>'; // Messaggio di caricamento
 
       fetch("/ask", {
         method: "POST",
@@ -25,9 +27,72 @@
         },
         body: JSON.stringify({ ingredients })
       })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("result").innerHTML = `<p>${data.answer}</p>`;
+      .then(res => {
+        if (!res.ok) {
+          // Se la risposta HTTP non è OK, prova a leggere l'errore JSON
+          return res.json().then(err => { throw err; });
+        }
+        return res.json();
+      })
+      .then(cocktails => { // Ora ci aspettiamo un array di cocktail
+        if (!Array.isArray(cocktails)) {
+            // Questo caso dovrebbe essere gestito da Flask, ma è una sicurezza
+            resultDiv.innerHTML = '<p class="error-message">Errore: La risposta non è un array di cocktail validi.</p>';
+            return;
+        }
+
+        if (cocktails.length === 0) {
+            resultDiv.innerHTML = '<p>Nessun cocktail trovato con gli ingredienti forniti.</p>';
+            return;
+        }
+
+        let allCocktailsHtml = '';
+        cocktails.forEach(data => {
+            if (data.error) { // Gestione errori individuali se presenti (meno probabile dopo le modifiche lato server)
+                allCocktailsHtml += `<div class="cocktail-item"><p class="error-message">Errore: ${data.error}</p>`;
+                if (data.raw_response) {
+                    allCocktailsHtml += `<p class="error-message">Risposta API grezza: <pre>${data.raw_response}</pre></p>`;
+                }
+                allCocktailsHtml += `</div>`;
+                return;
+            }
+
+            let html = `
+              <div class="cocktail-item">
+                <h2>${data.nome || 'Nome non disponibile'}</h2>
+                <h3>Ingredienti:</h3>
+                <ul>`;
+            // Controlla se data.ingredienti esiste ed è un array
+            if (Array.isArray(data.ingredienti)) {
+                data.ingredienti.forEach(item => {
+                  html += `<li>${item.nome || 'Nome ignoto'}: ${item.quantità || 'Quantità ignota'}</li>`;
+                });
+            } else {
+                html += `<li>Ingredienti non disponibili o formato non corretto.</li>`;
+            }
+            html += `</ul>
+                <h3>Preparazione:</h3>
+                <p>${data.ricetta || 'Ricetta non disponibile'}</p>
+              </div>`;
+            allCocktailsHtml += html;
+        });
+
+        resultDiv.innerHTML = allCocktailsHtml;
+      })
+      .catch(error => {
+        console.error('Errore durante il fetch:', error);
+        let errorMessage = 'Si è verificato un errore sconosciuto.';
+        if (error.error) { // Se l'errore proviene dal tuo server Flask
+            errorMessage = `Errore: ${error.error}`;
+            if (error.raw_response) {
+                errorMessage += `<br>Risposta API grezza: <pre>${error.raw_response}</pre>`;
+            }
+        } else if (error instanceof TypeError) {
+            errorMessage = 'Errore di rete o problema di connessione.';
+        } else {
+            errorMessage = `Si è verificato un errore: ${error.message || error}`;
+        }
+        resultDiv.innerHTML = `<p class="error-message">${errorMessage}</p>`;
       });
     }
   </script>

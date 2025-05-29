@@ -1,41 +1,230 @@
+/* static/style.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+    --primary-color: #007bff; /* Blu vivace per bottoni e elementi interattivi */
+    --secondary-color: #28a745; /* Verde per messaggi di successo o accenti */
+    --accent-color: #ffc107; /* Giallo/Arancione per un tocco di energia */
+    --text-color: #333; /* Grigio scuro per il testo principale */
+    --light-text-color: #666; /* Grigio più chiaro per testo secondario */
+    --background-color: #f8f9fa; /* Sfondo molto chiaro */
+    --card-background: #ffffff; /* Sfondo delle "schede" */
+    --border-color: #e9ecef; /* Colore per i bordi sottili */
+    --error-color: #dc3545; /* Rosso per messaggi di errore */
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: #f7f7f7;
-  padding: 30px;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Allinea in alto per più spazio */
+    min-height: 100vh;
+    color: var(--text-color);
+    line-height: 1.6;
 }
 
 .container {
-  max-width: 600px;
-  margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background-color: var(--card-background);
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 700px; /* Aumentato leggermente per layout più arioso */
+    margin-top: 50px; /* Spazio dall'alto */
 }
 
-input {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+h1 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 2.5em;
+    font-weight: 700;
+}
+
+p {
+    color: var(--light-text-color);
+    margin-bottom: 25px;
+    font-size: 1.1em;
+}
+
+input[type="text"] {
+    width: calc(100% - 30px); /* Regolato per padding */
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1em;
+    color: var(--text-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]::placeholder {
+    color: #adb5bd;
+}
+
+input[type="text"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
 }
 
 button {
-  margin-top: 10px;
-  padding: 12px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
 }
 
 button:hover {
-  background-color: #45a049;
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
 }
 
 #result {
-  margin-top: 20px;
-  font-size: 1.2em;
+    margin-top: 30px;
+    padding: 25px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: var(--background-color);
+    text-align: left;
+    min-height: 100px; /* Per evitare salti di layout */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Spazio tra i cocktail */
+}
+
+.cocktail-item {
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.cocktail-item:hover {
+    transform: translateY(-5px);
+}
+
+.cocktail-item:not(:last-child) {
+    margin-bottom: 20px; /* Spazio tra gli elementi cocktail */
+}
+
+.cocktail-item h2 {
+    color: var(--primary-color);
+    font-size: 1.8em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 8px;
+}
+
+.cocktail-item h3 {
+    color: var(--secondary-color);
+    font-size: 1.3em;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.cocktail-item ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.cocktail-item li {
+    background-color: #f0f8ff; /* Sfondo leggero per gli ingredienti */
+    border-left: 4px solid var(--primary-color);
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    font-size: 0.95em;
+    color: var(--light-text-color);
+}
+
+.cocktail-item p {
+    color: var(--text-color);
+    font-size: 1em;
+    text-align: justify;
+    margin-top: 10px;
+    margin-bottom: 0; /* Rimuove il margin-bottom extra */
+}
+
+.error-message {
+    color: var(--error-color);
+    font-weight: 600;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left: 5px solid var(--error-color);
+    border-radius: 5px;
+}
+
+/* Stili per le pre (risposta grezza) */
+.error-message pre {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap; /* Mantiene il testo su più righe */
+    word-break: break-all; /* Spezza le parole lunghe */
+    max-height: 200px; /* Limita l'altezza per non occupare troppo spazio */
+    overflow-y: auto; /* Aggiunge scroll se il contenuto è troppo lungo */
+    margin-top: 10px;
+    border: 1px solid #ced4da;
+    text-align: left;
+    color: #000;
+}
+
+/* Media Queries per la reattività */
+@media (max-width: 768px) {
+    .container {
+        padding: 25px;
+        margin-top: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    p {
+        font-size: 1em;
+    }
+
+    button {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+
+    .cocktail-item h2 {
+        font-size: 1.5em;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    input[type="text"], button {
+        font-size: 0.9em;
+    }
 }
